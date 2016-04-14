@@ -1,6 +1,7 @@
 import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
 import java.awt.Color;
-
+import java.util.List;
+import java.util.ArrayList;
 /**
  * Write a description of class MyWorld here.
  * 
@@ -17,7 +18,8 @@ public class MyWorld extends World
  */
 
  private boolean[][] world = new boolean[500][500];
- 
+ private boolean[][] tempworld = world;
+ private int nearby = 0;
     /**
      * Constructor for objects of class MyWorld.
      * 
@@ -31,8 +33,11 @@ public class MyWorld extends World
     }
     
     public void act() {
-    draw();
+        generate();
+        draw();
+        
     }
+    
     /**
      * Randomize world of cells
      */
@@ -66,6 +71,51 @@ public class MyWorld extends World
                      b.setColorAt(i,j,black); }
                 }
             }
+    }
+    
+    public void generate()
+    {
+        for (int y = 1; y <= 498; y++)
+        {
+            for (int x = 1; x <= 498; x++)
+            {
+                nearby = calculation(x,y);
+                
+                if (nearby < 2 || nearby > 3)
+                {
+                    world[x][y] = false;
+                }
+                else if (nearby == 3)
+                {
+                    world[x][y] = true;
+                }
+                
+                else 
+                {
+                    world[x][y] = tempworld[x][y];
+                }
+            }
+        }
+    }
+    
+    public int calculation (int xlocation, int ylocation)
+    {
+        nearby = 0;
+        for (int y = ylocation - 1; y <= ylocation + 1; y++)
+        {
+            for (int x = xlocation - 1; x <= xlocation + 1; x++)
+            {
+                if (x != xlocation || y != ylocation)
+                {
+                   if(tempworld[x][y] == true)
+                   {
+                    nearby++;
+                   }
+                }
+            }
+        }
+        
+        return nearby;
     }
     
 }
